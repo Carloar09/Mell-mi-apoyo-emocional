@@ -1,9 +1,9 @@
 package elicuci.czelada.mell_apoyo_emocional.service;
 
-import elicuci.czelada.mell_apoyo_emocional.auth.AuthResponse;
-import elicuci.czelada.mell_apoyo_emocional.auth.GoogleAuthRequest;
-import elicuci.czelada.mell_apoyo_emocional.auth.LoginRequest;
-import elicuci.czelada.mell_apoyo_emocional.auth.RegisterRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.AuthResponse;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.GoogleAuthRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.LoginRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.RegisterRequest;
 import elicuci.czelada.mell_apoyo_emocional.model.User;
 import elicuci.czelada.mell_apoyo_emocional.model.enums.AuthProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,9 +1,9 @@
 package elicuci.czelada.mell_apoyo_emocional.controller;
 
-import elicuci.czelada.mell_apoyo_emocional.auth.AuthResponse;
-import elicuci.czelada.mell_apoyo_emocional.auth.GoogleAuthRequest;
-import elicuci.czelada.mell_apoyo_emocional.auth.LoginRequest;
-import elicuci.czelada.mell_apoyo_emocional.auth.RegisterRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.AuthResponse;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.GoogleAuthRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.LoginRequest;
+import elicuci.czelada.mell_apoyo_emocional.dto.auth.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

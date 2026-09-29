@@ -1,4 +1,4 @@
-package elicuci.czelada.mell_apoyo_emocional.auth;
+package elicuci.czelada.mell_apoyo_emocional.dto.auth;
 
 import java.util.UUID;
 
