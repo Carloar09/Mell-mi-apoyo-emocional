@@ -1,25 +1,27 @@
 package elicuci.czelada.mell_apoyo_emocional.service.security;
 
-
+import elicuci.czelada.mell_apoyo_emocional.model.User;
+import elicuci.czelada.mell_apoyo_emocional.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import elicuci.czelada.mell_apoyo_emocional.model.User;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import elicuci.czelada.mell_apoyo_emocional.repository.UserRepository;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
-//Intercepta cada request, busca el header "Authorization: Bearer <jwt>",
-
+/**
+ * Intercepta cada request, busca el header "Authorization: Bearer <jwt>",
+ * lo valida y deja al usuario autenticado en el SecurityContext.
+ */
 @Component
-public class JwtAuthenticationFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;

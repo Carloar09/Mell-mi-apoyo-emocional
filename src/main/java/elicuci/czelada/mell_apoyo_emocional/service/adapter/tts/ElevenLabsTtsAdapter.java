@@ -9,7 +9,9 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 // Implementacion del puerto TTs contra Elevenlabs
@@ -21,6 +23,8 @@ import java.util.Map;
 public class ElevenLabsTtsAdapter implements TextToSpeechPort {
     private final WebClient elevenLabsWebClient;
     private final ElevenLabsProperties properties;
+    private static final Logger log =
+            LoggerFactory.getLogger(ElevenLabsTtsAdapter.class);
 
     public ElevenLabsTtsAdapter(@Qualifier(ExternalApiClientsConfig.ELEVENLABS_CLIENT) WebClient elevenLabsWebClient,
                                 ElevenLabsProperties properties) {
@@ -29,22 +33,40 @@ public class ElevenLabsTtsAdapter implements TextToSpeechPort {
     }
     @Override
     public byte[] synthesize(String text, String externalVoiceId) {
-        String voiceId = (externalVoiceId != null && !externalVoiceId.isBlank())
-                ? externalVoiceId
-                : properties.defaultVoiceId();
+
+        String voiceId = properties.defaultVoiceId();
+
+        log.info("Probando voz predeterminada: {}", voiceId);
 
         Map<String, Object> body = Map.of(
                 "text", text,
-                "model_id", "eleven_multilingual_v2"
+                "model_id", "eleven_turbo_v2_5",
+                "language_code", "es",
+                "voice_settings", Map.of(
+                        "stability", 0.40,          // más bajo = más expresiva, más emoción
+                        "similarity_boost", 0.80,
+                        "style", 0.35,
+                        "use_speaker_boost", true
+                )
         );
 
-        return elevenLabsWebClient.post()
-                .uri("/text-to-speech/{voiceId}", voiceId)
-                .accept(MediaType.parseMediaType("audio/mpeg"))
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(byte[].class)
-                .block();
+        try {
+            return elevenLabsWebClient.post()
+                    .uri("/text-to-speech/{voiceId}?output_format=mp3_44100_64", voiceId)
+                    .accept(MediaType.parseMediaType("audio/mpeg"))
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(byte[].class)
+                    .block();
+
+        } catch (WebClientResponseException e) {
+            log.error(
+                    "Error de ElevenLabs. HTTP: {}, respuesta: {}",
+                    e.getStatusCode(),
+                    e.getResponseBodyAsString()
+            );
+            throw e;
+        }
     }
 
     @Override
